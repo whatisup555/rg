@@ -2,7 +2,7 @@ from email.policy import default
 from sqlalchemy import TEXT, Boolean, Column, Enum, Index, Integer, String, create_engine, Float, BIGINT
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from chargingInBupt.config import CONFIG
+from config import CONFIG
 
 # 创建对象的基类:
 Base = declarative_base()
@@ -121,10 +121,12 @@ class WaitQueue(Base):
 # 初始化数据库连接:
 engine = create_engine('mysql+mysqlconnector://' + CONFIG['db']['user'] + ':' + CONFIG['db']['password'] +
                        '@' + CONFIG['db']['host'] + ':' +
-                       str(CONFIG['db']['port']) + '/' + CONFIG['db']['db'],
-                       echo=False)
+                       str(CONFIG['db']['port']) + '/' + CONFIG['db']['db']
+                       # ,auth_plugin='mysql_native_password' ,
+                       # ,auth_plugin='mysql_native_password'
+                       ,echo=False)
 # 创建DBSession类型:
 session = sessionmaker(bind=engine)()
 
 # Base.metadata.drop_all(engine)
-# Base.metadata.create_all(engine)
+Base.metadata.create_all(engine)
